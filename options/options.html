@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>밈 레이더 설정</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="container">
+    <h1>📡 밈 레이더 설정</h1>
+
+    <!-- AI 설정 -->
+    <section class="section">
+      <h2>AI 밈 설명</h2>
+      <div class="field">
+        <label>AI 제공자</label>
+        <select id="ai-provider">
+          <option value="claude">Claude (Anthropic)</option>
+          <option value="openai">GPT (OpenAI)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>API 키</label>
+        <input type="password" id="api-key" placeholder="API 키를 입력하세요">
+        <p class="hint">키는 로컬에만 저장됩니다. 외부 전송 없음.</p>
+      </div>
+    </section>
+
+    <!-- 크롤링 소스 -->
+    <section class="section">
+      <h2>크롤링 소스</h2>
+      <div class="checkbox-group">
+        <label class="checkbox-label">
+          <input type="checkbox" id="src-dcinside" checked>
+          <span class="check-dot source-dc"></span>
+          DC인사이드
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" id="src-fmkorea" checked>
+          <span class="check-dot source-fm"></span>
+          에펨코리아
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" id="src-instiz" checked>
+          <span class="check-dot source-instiz"></span>
+          인스티즈
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" id="src-yeosig" checked>
+          <span class="check-dot source-yeosig"></span>
+          여성시대
+        </label>
+      </div>
+    </section>
+
+    <!-- 크롤링 주기 -->
+    <section class="section">
+      <h2>크롤링 주기</h2>
+      <div class="field">
+        <label>주기 (분)</label>
+        <select id="crawl-interval">
+          <option value="15">15분</option>
+          <option value="30" selected>30분</option>
+          <option value="60">1시간</option>
+          <option value="120">2시간</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- 데이터 관리 -->
+    <section class="section">
+      <h2>데이터</h2>
+      <button id="btn-clear" class="btn-danger">수집 데이터 초기화</button>
+      <button id="btn-clear-cache" class="btn-secondary">AI 캐시 초기화</button>
+    </section>
+
+    <div class="save-bar">
+      <span id="save-status"></span>
+      <button id="btn-save" class="btn-primary">저장</button>
+    </div>
+  </div>
+
+  <script src="options.js" type="module"></script>
+</body>
+</html>
