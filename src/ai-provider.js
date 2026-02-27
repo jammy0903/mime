@@ -22,21 +22,14 @@ export async function explainMeme(trend, settings) {
 }
 
 function buildPrompt(trend) {
-  const sourceNames = {
-    dcinside: 'DC인사이드',
-    fmkorea: '에펨코리아',
-    instiz: '인스티즈',
-    yeosig: '여성시대',
-  };
-
-  const sources = trend.sources.map((s) => sourceNames[s] || s).join(', ');
+  const videoCount = trend.sources.length;
   const samples = trend.samples.map((s, i) => `${i + 1}. "${s}"`).join('\n');
 
-  return `한국 인터넷 커뮤니티에서 최근 유행하는 표현/밈을 분석해주세요.
+  return `한국 YouTube 인기 영상 댓글에서 최근 유행하는 표현/밈을 분석해주세요.
 
 유행 표현: "${trend.phrase}"
 등장 횟수: ${trend.count}회
-출현 커뮤니티: ${sources}
+출현 영상: ${videoCount}개의 서로 다른 인기 영상 댓글에서 발견
 사용 예시:
 ${samples}
 
@@ -56,17 +49,11 @@ async function callClaude(prompt, apiKey) {
       'Content-Type': 'application/json',
       'x-api-key': apiKey,
       'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true',
     },
     body: JSON.stringify({
       model: 'claude-sonnet-4-20250514',
       max_tokens: 500,
-      messages: [
-        {
-          role: 'user',
-          content: prompt,
-        },
-      ],
+      messages: [{ role: 'user', content: prompt }],
     }),
   });
 
@@ -88,12 +75,7 @@ async function callOpenAI(prompt, apiKey) {
     },
     body: JSON.stringify({
       model: 'gpt-4o-mini',
-      messages: [
-        {
-          role: 'user',
-          content: prompt,
-        },
-      ],
+      messages: [{ role: 'user', content: prompt }],
       max_tokens: 500,
     }),
   });

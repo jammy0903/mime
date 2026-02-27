@@ -1,0 +1,529 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+  background: #f5f5f7;
+  color: #1d1d1f;
+  min-height: 100vh;
+}
+
+/* ─── 헤더 ──────────────────────────────────────── */
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.85);
+  border-bottom: 1px solid #e0e0e0;
+  backdrop-filter: blur(12px);
+}
+
+.header-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo {
+  font-size: 24px;
+}
+
+.header h1 {
+  font-size: 18px;
+  font-weight: 800;
+  color: #1d1d1f;
+}
+
+.header-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  background: #FF0000;
+  padding: 2px 8px;
+  border-radius: 10px;
+  min-width: 20px;
+  text-align: center;
+}
+
+.header-badge:empty {
+  display: none;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.last-update {
+  font-size: 12px;
+  color: #8e8e93;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  color: #8e8e93;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  transition: all 0.15s;
+}
+
+.icon-btn:hover {
+  background: #e8e8ed;
+  color: #1d1d1f;
+}
+
+.icon-btn.spinning svg {
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ─── 데이터 현황 바 ─────────────────────────────── */
+
+.stats-bar {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 12px;
+  color: #8e8e93;
+}
+
+.stats-bar:empty {
+  display: none;
+}
+
+.stat-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  padding: 4px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.stat-chip b {
+  color: #1d1d1f;
+  font-weight: 700;
+}
+
+/* ─── 메인 ──────────────────────────────────────── */
+
+.main {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 16px 20px 40px;
+}
+
+/* ─── 피드 ──────────────────────────────────────── */
+
+.feed {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ─── 카드 ──────────────────────────────────────── */
+
+.meme-card {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 14px;
+  padding: 18px 20px;
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+}
+
+.meme-card:hover {
+  border-color: #c0c0c0;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  transform: translateY(-1px);
+}
+
+.card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.card-rank {
+  font-size: 12px;
+  font-weight: 700;
+  color: #FF0000;
+  background: rgba(255, 0, 0, 0.08);
+  padding: 3px 10px;
+  border-radius: 10px;
+}
+
+.card-score {
+  font-size: 12px;
+  color: #8e8e93;
+}
+
+.card-phrase {
+  font-size: 22px;
+  font-weight: 800;
+  color: #1d1d1f;
+  margin-bottom: 10px;
+  line-height: 1.35;
+  word-break: keep-all;
+}
+
+.card-meta {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.meta-item {
+  font-size: 12px;
+  color: #6e6e73;
+}
+
+.card-sources {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.source-tag {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.tag-youtube {
+  background: rgba(255, 0, 0, 0.08);
+  color: #cc0000;
+}
+
+/* ─── AI 설명 ─────────────────────────────────── */
+
+.card-explain-btn {
+  width: 100%;
+  background: #f5f5f7;
+  border: 1px solid #e0e0e0;
+  color: #6e6e73;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-top: 6px;
+}
+
+.card-explain-btn:hover {
+  background: #e8e8ed;
+  color: #1d1d1f;
+  border-color: #c0c0c0;
+}
+
+.card-explain-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.card-explanation {
+  background: #f0f0ff;
+  border: 1px solid #d8d8f0;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-top: 10px;
+  font-size: 13px;
+  line-height: 1.8;
+  color: #3a3a4a;
+  white-space: pre-wrap;
+}
+
+.card-explanation strong {
+  color: #1d1d2f;
+}
+
+/* ─── 샘플 ──────────────────────────────────────── */
+
+.card-samples {
+  margin-top: 10px;
+}
+
+.card-samples summary {
+  font-size: 12px;
+  color: #8e8e93;
+  cursor: pointer;
+  user-select: none;
+  padding: 4px 0;
+}
+
+.card-samples summary:hover {
+  color: #6e6e73;
+}
+
+.sample-list {
+  margin-top: 8px;
+  padding-left: 12px;
+  border-left: 2px solid #e0e0e0;
+}
+
+.sample-item {
+  font-size: 12px;
+  color: #6e6e73;
+  padding: 5px 0;
+  line-height: 1.5;
+}
+
+/* ─── 로딩/빈상태 ────────────────────────────────── */
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120px 0;
+  color: #8e8e93;
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #e0e0e0;
+  border-top-color: #FF0000;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  margin-bottom: 16px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 100px 20px;
+  color: #8e8e93;
+}
+
+.empty-state .empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.empty-state p {
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* ─── 모달 ──────────────────────────────────────── */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-overlay.hidden {
+  display: none;
+}
+
+.modal {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 480px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px;
+  border-bottom: 1px solid #e8e8ed;
+}
+
+.modal-header h2 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1d1d1f;
+}
+
+.modal-body {
+  padding: 18px 22px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 14px 22px;
+  border-top: 1px solid #e8e8ed;
+}
+
+/* ─── 설정 폼 ─────────────────────────────────── */
+
+.section {
+  margin-bottom: 20px;
+}
+
+.section h3 {
+  font-size: 13px;
+  font-weight: 600;
+  color: #6e6e73;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+
+.field {
+  margin-bottom: 12px;
+}
+
+.field:last-child {
+  margin-bottom: 0;
+}
+
+.field label {
+  display: block;
+  font-size: 13px;
+  color: #6e6e73;
+  margin-bottom: 6px;
+}
+
+select, input[type="password"] {
+  width: 100%;
+  background: #f5f5f7;
+  border: 1px solid #d1d1d6;
+  color: #1d1d1f;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+select:focus, input:focus {
+  border-color: #FF0000;
+}
+
+.hint {
+  font-size: 11px;
+  color: #8e8e93;
+  margin-top: 4px;
+}
+
+/* ─── 버튼 ──────────────────────────────────────── */
+
+.btn-primary {
+  background: #FF0000;
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn-primary:hover {
+  background: #cc0000;
+}
+
+.btn-secondary {
+  background: #f5f5f7;
+  color: #6e6e73;
+  border: 1px solid #d1d1d6;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background: #e8e8ed;
+  color: #1d1d1f;
+}
+
+.btn-danger {
+  background: rgba(231, 76, 60, 0.08);
+  color: #e74c3c;
+  border: 1px solid rgba(231, 76, 60, 0.25);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.btn-danger:hover {
+  background: rgba(231, 76, 60, 0.15);
+}
+
+.btn-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+#save-status {
+  font-size: 13px;
+  color: #27ae60;
+}
+
+/* ─── 반응형 ─────────────────────────────────── */
+
+@media (max-width: 600px) {
+  .header-inner {
+    padding: 12px 16px;
+  }
+
+  .main {
+    padding: 12px 14px 30px;
+  }
+
+  .meme-card {
+    padding: 14px 16px;
+  }
+
+  .card-phrase {
+    font-size: 18px;
+  }
+
+  .last-update {
+    display: none;
+  }
+}

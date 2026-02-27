@@ -1,0 +1,15 @@
+{
+  "name": "mime-radar",
+  "version": "2.0.0",
+  "description": "밈 레이더 - YouTube 댓글 밈 트렌드 웹앱",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "youtubei.js": "^12.2.0"
+  }
+}
