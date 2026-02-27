@@ -2,6 +2,9 @@ import express from 'express';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import * as youtube from './src/crawlers/youtube.js';
+import * as fmkorea from './src/crawlers/fmkorea.js';
+import * as dcinside from './src/crawlers/dcinside.js';
+import * as dogdrip from './src/crawlers/dogdrip.js';
 import { analyzePosts } from './src/analyzer.js';
 import { explainMeme } from './src/ai-provider.js';
 import * as storage from './src/storage.js';
@@ -18,12 +21,41 @@ app.use(express.static(join(__dirname, 'public')));
 // ─── 크롤링 로직 ─────────────────────────────────
 
 async function runCrawl() {
-  console.log('[밈 레이더] YouTube 크롤링 시작...');
+  console.log('[밈 레이더] 크롤링 시작...');
   const settings = storage.getSettings();
 
   try {
-    const posts = await youtube.crawl(settings);
-    console.log(`[밈 레이더] YouTube: ${posts.length}개 댓글 수집`);
+    // 소스별 24시간 캐시 확인
+    const sources = [
+      { key: 'youtube', crawl: () => youtube.crawl(settings), label: 'YouTube' },
+      { key: 'fmkorea',  crawl: () => fmkorea.crawl(),        label: 'FM' },
+      { key: 'dcinside', crawl: () => dcinside.crawl(),       label: 'DC' },
+      { key: 'dogdrip',  crawl: () => dogdrip.crawl(),        label: '개드립' },
+    ];
+
+    // 순차 크롤링 (puppeteer 메모리 절약)
+    const allCrawled = [];
+    for (const s of sources) {
+      const cached = storage.getCrawlCache(s.key);
+      if (cached) {
+        console.log(`[${s.label}] 캐시 사용 (${cached.length}개)`);
+        allCrawled.push(cached);
+        continue;
+      }
+      try {
+        const posts = await s.crawl();
+        if (posts.length > 0) storage.setCrawlCache(s.key, posts);
+        allCrawled.push(posts);
+      } catch (err) {
+        console.error(`[${s.label}] 크롤링 실패:`, err.message);
+        allCrawled.push([]);
+      }
+    }
+
+    const counts = sources.map((s, i) => `${s.label}: ${allCrawled[i].length}개`).join(', ');
+    console.log(`[밈 레이더] ${counts} 수집`);
+
+    const posts = allCrawled.flat();
 
     if (posts.length === 0) {
       console.log('[밈 레이더] 수집된 데이터 없음');
@@ -65,9 +97,13 @@ app.get('/api/trends', (req, res) => {
   res.json({ trends });
 });
 
-// 수동 크롤링
+// 수동 크롤링 (force=true로 캐시 무시)
 app.post('/api/refresh', async (req, res) => {
   try {
+    if (req.body.force) {
+      storage.clearCrawlCache();
+      console.log('[밈 레이더] 캐시 초기화 (강제 새로고침)');
+    }
     const trends = await runCrawl();
     res.json({ trends });
   } catch (err) {
@@ -131,6 +167,7 @@ app.post('/api/settings', (req, res) => {
 // 데이터 초기화
 app.post('/api/clear-data', (req, res) => {
   storage.clearData();
+  storage.clearCrawlCache();
   res.json({ ok: true });
 });
 

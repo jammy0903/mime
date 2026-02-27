@@ -15,6 +15,8 @@ const store = {
   settings: { ...DEFAULT_SETTINGS },
   aiCache: {},
   lastCrawl: null,
+  // 소스별 크롤 캐시: { [source]: { posts: [], timestamp } }
+  crawlCache: {},
 };
 
 export function getSettings() {
@@ -73,4 +75,26 @@ export function clearData() {
 
 export function clearAiCache() {
   store.aiCache = {};
+}
+
+// ─── 소스별 크롤 캐시 (24시간 TTL) ──────────────
+
+const CRAWL_CACHE_TTL = 24 * 60 * 60 * 1000; // 24시간
+
+export function getCrawlCache(source) {
+  const entry = store.crawlCache[source];
+  if (!entry) return null;
+  if (Date.now() - entry.timestamp > CRAWL_CACHE_TTL) {
+    delete store.crawlCache[source];
+    return null;
+  }
+  return entry.posts;
+}
+
+export function setCrawlCache(source, posts) {
+  store.crawlCache[source] = { posts, timestamp: Date.now() };
+}
+
+export function clearCrawlCache() {
+  store.crawlCache = {};
 }

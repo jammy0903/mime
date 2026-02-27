@@ -351,6 +351,11 @@ const BLACKLIST_PHRASES = [
   'of the', 'in the', 'to the', 'and the', 'for the',
   'this is', 'thank you', 'love this',
   'congratulations', 'congrats',
+  // 커뮤니티 스팸/매크로
+  '십자가', '예수님', '부활하셔서', '구원도 주심',
+  '실베 절취선', '절취선',
+  '대한민국 파이팅', '일류국가로 영원하라',
+  '펫티켓', '반려견주',
 ];
 
 // 인사/응원 패턴 (정규식)
@@ -571,6 +576,24 @@ export async function analyzePosts(posts) {
     }
   }
 
+  // === 스팸 복붙 감지: 완전 동일 문장이 다수 소스에 복사된 경우 ===
+  // 밈은 약간씩 변형되지만, 스팸은 글자 하나 안 바뀜
+  const exactDupMap = new Map(); // normalized text → Set<source>
+  for (const p of posts) {
+    const norm = normalize(p.text);
+    if (norm.length < 10) continue;
+    if (!exactDupMap.has(norm)) exactDupMap.set(norm, new Set());
+    exactDupMap.get(norm).add(p.source);
+  }
+  // 3개+ 소스에서 완전 동일 문장 = 스팸 복붙
+  const spamTexts = new Set();
+  for (const [text, sources] of exactDupMap) {
+    if (sources.size >= 3) spamTexts.add(text);
+  }
+  if (spamTexts.size > 0) {
+    console.log(`[분석] 스팸 복붙 ${spamTexts.size}개 감지`);
+  }
+
   // === TF-IDF + 다양성 + 신선도 기반 스코어링 ===
   const trends = [...results.values()];
   for (const t of trends) {
@@ -609,6 +632,16 @@ export async function analyzePosts(posts) {
       }
     }
 
+    // ★ 스팸 복붙 페널티: 완전 동일 문장이 5개+ 소스에 복붙
+    let spamPenalty = 0;
+    if (spamTexts.has(t.phrase) || spamTexts.has(normalize(t.phrase))) {
+      spamPenalty = -500;
+    } else if (t.type === 'sentence' && t.samples) {
+      // 샘플 중 스팸 텍스트와 겹치면 부분 감점
+      const spamOverlap = t.samples.filter(s => spamTexts.has(normalize(s))).length;
+      if (spamOverlap > 0) spamPenalty = -spamOverlap * 100;
+    }
+
     // ★ 좋아요 기반 점수: 밈 댓글은 공감을 받아 좋아요가 높음
     const avgLikes = t.avgLikes || 0;
     const likesScore = Math.log2(avgLikes + 1) * 15;
@@ -616,7 +649,7 @@ export async function analyzePosts(posts) {
     t.diversity = Math.round(diversity * 100) / 100;
     t.avgLikes = Math.round(avgLikes * 10) / 10;
     t.score = Math.round(
-      (tfidfScore + freqScore + sourceScore + concentrationBonus + diversityScore + noveltyScore + typeBonus + lenScore + genericPenalty + likesScore) * 10
+      (tfidfScore + freqScore + sourceScore + concentrationBonus + diversityScore + noveltyScore + typeBonus + lenScore + genericPenalty + likesScore + spamPenalty) * 10
     ) / 10;
   }
 
